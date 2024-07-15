@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.fvitorr.crud_spring.models.cidade;
-import com.fvitorr.crud_spring.services.cidadeServices;
+import com.fvitorr.crud_spring.models.pessoa;
 import com.fvitorr.crud_spring.services.pessoaServices;
 
 import java.net.URI;
@@ -24,54 +24,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 
-
 @RestController
-@RequestMapping("/api/cidade")
+@RequestMapping("api/pessoa")
 @Validated
-public class cidadeController {
+public class pessoaController {
   @Autowired
-  private cidadeServices cidadeS;
-
   private pessoaServices pessoaS;
 
   @GetMapping
-  public ResponseEntity<List<cidade>> getAllCidades() {
-      List<cidade> cidades = cidadeS.findAll();
-      return new ResponseEntity<>(cidades, HttpStatus.OK);
-  }
-  
-
-  @GetMapping("/{id}")
-  public ResponseEntity<cidade> findById(@PathVariable long id) {
-    cidade obj = this.cidadeS.findById(id);
-    return ResponseEntity.ok(obj);
+  public ResponseEntity<List<pessoa>> getAllCidades() {
+      List<pessoa> pessoas = pessoaS.findAll();
+      return new ResponseEntity<>(pessoas, HttpStatus.OK);
   }
 
   @PostMapping
   @Validated
-  public ResponseEntity<Void> create( @RequestBody cidade obj){
-    this.cidadeS.create(obj);
+  public ResponseEntity<Void> create( @RequestBody pessoa obj){
+    this.pessoaS.create(obj);
     URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
     return ResponseEntity.created(uri).build();
   }
 
   @PutMapping("/{id}")
   @Validated
-  public ResponseEntity<Void> updade(@RequestBody cidade obj, @PathVariable Long id) {
+  public ResponseEntity<Void> updade(@RequestBody pessoa obj, @PathVariable Long id) {
       obj.setId(id);
-      this.cidadeS.update(obj);
+      this.pessoaS.update(obj);
       return ResponseEntity.noContent().build();
   }
 
   @DeleteMapping("/{id}")
   @Validated
-  public ResponseEntity<Void> delete(@PathVariable Long id) {
-      try {
-          this.cidadeS.delete(id);
-          return ResponseEntity.noContent().build();
-      } catch (Exception e) {
-          return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-      }
+  public ResponseEntity<Void> delete(@Validated @PathVariable Long id){
+    this.pessoaS.delete(id);
+    return ResponseEntity.noContent().build();
   }
-  
 }

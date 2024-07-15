@@ -9,12 +9,15 @@ import org.springframework.stereotype.Service;
 import com.fvitorr.crud_spring.models.cidade;
 import com.fvitorr.crud_spring.repositories.cidadeRepository;
 
+
 import jakarta.transaction.Transactional;
 
 @Service
 public class cidadeServices {
   @Autowired
   private cidadeRepository c_Repository;
+
+
 
   @Transactional
   public cidade create(cidade obj){
@@ -47,13 +50,15 @@ public class cidadeServices {
   }
 
   @Transactional
-  public void delete(Long id){
+  public void delete (Long id){
+    findById(id);
     try{
       this.c_Repository.deleteById(id);
     }catch(Exception e){
-      throw new RuntimeException("Erro ao excluir");
+      throw new RuntimeException("Há entidades relacionadas, impossivel excluir");
     }
   }
+
 
   public cidade findById(Long id){
     Optional<cidade> cidade = this.c_Repository.findById(id);
